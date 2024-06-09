@@ -1,9 +1,8 @@
 
-## Introduction
-This repository contains code for various natural language processing tasks, including text generation, summarization, question answering, and context retrieval. The code utilizes pre-trained models from Hugging Face Transformers and Google's Sentence Transformers, along with ChromaDB for context retrieval.
+# Introduction
+This repository contains code for implementing RAG. We have compared different models to check which one is better for our cause.
 
 ## Installation
-Ensure you have Python installed, along with the necessary packages. You can install the required packages via pip:
 
 ```bash
 !pip install -q chromadb sentence-transformers pymupdf
@@ -31,20 +30,6 @@ login(access_token)
 - DistilBERT
 - GPT-Neo
 - Gemma
-
-### Usage Example
-Instantiate a model:
-
-```python
-llm = GPT2()
-```
-
-Generate text:
-
-```python
-response = llm.generate_text(question, context)
-print(response)
-```
 
 ### Collection
 The `Collection` class facilitates context retrieval using ChromaDB. Here's how to use it:
@@ -83,9 +68,9 @@ text = extract_text_from_pdf(pdf_path)
 contexts = preprocess_text(text)
 ```
 
-# Function Documentation
+## Function Documentation
 
-## 1. `extract_text_from_pdf(pdf_path)`
+### 1. `extract_text_from_pdf(pdf_path)`
 
 **Description:**
 Extracts text content from a PDF file.
@@ -96,7 +81,7 @@ Extracts text content from a PDF file.
 **Returns:**
 - `text` (str): Extracted text content from the PDF.
 
-## 2. `preprocess_text(text, chunk_size=500)`
+### 2. `preprocess_text(text, chunk_size=500)`
 
 **Description:**
 Preprocesses text content, splitting it into manageable chunks.
@@ -108,9 +93,9 @@ Preprocesses text content, splitting it into manageable chunks.
 **Returns:**
 - `preprocessed_text_chunks` (list): List of preprocessed text chunks.
 
-## 3. `Collection` class
+### 3. `Collection` class
 
-### `__init__(self, collection_name: str, transformer_type: str = 'all-MiniLM-L6-v2', load_online=False, save_transformer=False)`
+#### `__init__(self, collection_name: str, transformer_type: str = 'all-MiniLM-L6-v2', load_online=False, save_transformer=False)`
 
 **Description:**
 Initializes a collection object.
@@ -121,7 +106,7 @@ Initializes a collection object.
 - `load_online` (bool): Whether to load the transformer online.
 - `save_transformer` (bool): Whether to save the transformer locally after loading.
 
-### `load_sentence_transformer(self, transformer_type: str, load_online: bool, save_transformer: bool)`
+#### `load_sentence_transformer(self, transformer_type: str, load_online: bool, save_transformer: bool)`
 
 **Description:**
 Loads the sentence transformer.
@@ -131,7 +116,7 @@ Loads the sentence transformer.
 - `load_online` (bool): Whether to load the transformer online.
 - `save_transformer` (bool): Whether to save the transformer locally after loading.
 
-### `add_contexts(self, context_data: list)`
+#### `add_contexts(self, context_data: list)`
 
 **Description:**
 Adds context data to the collection.
@@ -139,7 +124,7 @@ Adds context data to the collection.
 **Parameters:**
 - `context_data` (list): List of text contexts to be added.
 
-### `retrieve_contexts(self, question: str, top_n: int = 1)`
+#### `retrieve_contexts(self, question: str, top_n: int = 1)`
 
 **Description:**
 Retrieves relevant contexts from the collection based on a given question.
@@ -148,9 +133,9 @@ Retrieves relevant contexts from the collection based on a given question.
 - `question` (str): The question for which contexts are retrieved.
 - `top_n` (int): Number of top contexts to retrieve (default is 1).
 
-## 4. `Summarizer` class
+### 4. `Summarizer` class
 
-### `__init__(self, summarizer_model:str='t5', load_online=False, save_model=False)`
+#### `__init__(self, summarizer_model:str='t5', load_online=False, save_model=False)`
 
 **Description:**
 Initializes a summarizer object.
@@ -160,7 +145,7 @@ Initializes a summarizer object.
 - `load_online` (bool): Whether to load the model online.
 - `save_model` (bool): Whether to save the model locally after loading.
 
-### `load_summarizer(self, summarizer_model: str, load_online: bool, save_model: bool)`
+#### `load_summarizer(self, summarizer_model: str, load_online: bool, save_model: bool)`
 
 **Description:**
 Loads the summarizer model.
@@ -170,7 +155,7 @@ Loads the summarizer model.
 - `load_online` (bool): Whether to load the model online.
 - `save_model` (bool): Whether to save the model locally after loading.
 
-### `summarize_text(self, input_text: str, context: str = '')`
+#### `summarize_text(self, input_text: str, context: str = '')`
 
 **Description:**
 Summarizes the input text using the loaded summarizer model.
@@ -179,44 +164,51 @@ Summarizes the input text using the loaded summarizer model.
 - `input_text` (str): The text to be summarized.
 - `context` (str): Additional context for summarization (optional).
 
-### `free_memory(self)`
+#### `free_memory(self)`
 
 **Description:**
 Frees up memory by deleting the loaded model and tokenizer, and clearing GPU memory.
 
-## 5. `T5_Summarizer` class
+### 5. `T5_Summarizer` class
 
 This is a subclass of `Summarizer` specifically for T5 summarization. It inherits all methods from the `Summarizer` class and overrides the `summarize_text` method with T5-specific summarization logic.
 
-## 6. Standalone Summarization Functions
+### 6. Standalone Summarization Functions
 
-### `summarize_with_bart(text: str)`
+#### `summarize_with_bart(text: str)`
 
 Summarizes text using the BART model.
 
 **Parameters:**
 - `text` (str): The text to be summarized.
 
-### `summarize_with_t5(text: str)`
+#### `summarize_with_t5(text: str)`
 
 Summarizes text using the T5 model.
 
 **Parameters:**
 - `text` (str): The text to be summarized.
 
-### `summarize_with_pegasus(text: str)`
+#### `summarize_with_pegasus(text: str)`
 
 Summarizes text using the Pegasus model.
 
 **Parameters:**
 - `text` (str): The text to be summarized.
+### LLM Class
 
+The `LLM` (Language Model Loader) class is used for loading different types of language models (LLMs) from the Hugging Face Transformers library. Here's how to use it:
+
+```python
+llm = LLM(llm_type='gpt2')
+```
 
 ## References
 - [Hugging Face Transformers](https://github.com/huggingface/transformers)
 - [Sentence Transformers](https://github.com/UKPLab/sentence-transformers)
 - [ChromaDB](https://github.com/google-research-datasets/chromadb)
-
 ```
 
-This README provides an overview of the code, including installation instructions, usage examples, and references to relevant resources. Adjust the paths and configurations as needed to suit your environment and requirements. Let me know if you need further assistance!
+
+
+#### `__init__(self, llm_type: str,
